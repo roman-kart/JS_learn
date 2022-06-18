@@ -15,9 +15,22 @@ learn_extensions.getIterator = (subject) => {
 };
 
 learn_extensions.map = (list, iteratee, context) => {
-    console.log(list, iteratee, context);
+    let iterator = learn_extensions.getIterator(list);
+    let newArray = [];
 
+    let current = iterator.next();
+    while (!current.done) {
+        if(context){
+            iteratee = iteratee.bind(context);
+        }
 
+        let currentKey = current.value[0];
+        let currentValue = current.value[1];
+        let newValue = iteratee(currentValue, currentKey, list);
+        newArray.push(newValue);
+
+        current = iterator.next();
+    }
 };
 
 let map = new Map(
@@ -31,3 +44,16 @@ let obj = {
     "1": 12,
     "4": 15
 };
+
+let logCollection = (value, key, list) => {
+    console.log('');
+    console.log('type: ', list.constructor.name);
+    console.log('key: ', key);
+    console.log('value: ', value);
+    console.log('');
+};
+
+learn_extensions.map(map, logCollection);
+learn_extensions.map(arr, logCollection);
+learn_extensions.map(set, logCollection);
+learn_extensions.map(obj, logCollection);
