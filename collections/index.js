@@ -39,7 +39,7 @@ learn_extensions.reduceLearn = (list, iteratee, memo, context) => {
     let current = iterator.next();
     // если memo не задано - присваиваем ей значение первого элемента
     if (memo == undefined) {
-        memo = current.value[1];
+        memo = String(current.value[1]);
     }
 
     while (!current.done) {
