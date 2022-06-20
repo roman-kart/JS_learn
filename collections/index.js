@@ -14,7 +14,7 @@ learn_extensions.getIterator = (subject) => {
     }
 };
 
-learn_extensions.map = (list, iteratee, context) => {
+learn_extensions.mapLearn = (list, iteratee, context) => {
     let iterator = learn_extensions.getIterator(list);
     let newArray = [];
 
@@ -31,6 +31,31 @@ learn_extensions.map = (list, iteratee, context) => {
 
         current = iterator.next();
     }
+};
+
+learn_extensions.reduceLearn = (list, iteratee, memo, context) => {
+    let iterator = learn_extensions.getIterator(list);
+    
+    let current = iterator.next();
+    // если memo не задано - присваиваем ей значение первого элемента
+    if (memo == undefined) {
+        memo = current.value[1];
+    }
+
+    while (!current.done) {
+        if(context !== undefined){
+            iteratee = iteratee.bind(context);
+        }
+
+        let currentKey = current.value[0];
+        let currentValue = current.value[1];
+
+        memo = iteratee(memo, currentValue, currentKey, list);
+
+        current = iterator.next();
+    }
+
+    return memo;
 };
 
 let map = new Map(
@@ -53,7 +78,30 @@ let logCollection = (value, key, list) => {
     console.log('');
 };
 
-learn_extensions.map(map, logCollection);
-learn_extensions.map(arr, logCollection);
-learn_extensions.map(set, logCollection);
-learn_extensions.map(obj, logCollection);
+let stringReduceCollection = (memo, value, key, list) => {
+    if (!(memo instanceof String)) {
+        let valueForAppend = ` (key: ${String(key)}, value: ${String(value)}) `;
+        memo += valueForAppend;
+    }
+    return memo;
+};
+
+// learn_extensions.mapLearn(map, logCollection);
+// learn_extensions.mapLearn(arr, logCollection);
+// learn_extensions.mapLearn(set, logCollection);
+// learn_extensions.mapLearn(obj, logCollection);
+
+let testCollections = [
+    map,
+    arr,
+    set,
+    obj,
+];
+
+testCollections.forEach(list => {
+    console.log(learn_extensions.reduceLearn(list, stringReduceCollection, 'memo'));
+});
+
+testCollections.forEach(list => {
+    console.log(learn_extensions.reduceLearn(list, stringReduceCollection));
+});
