@@ -1,6 +1,29 @@
 "use strict"
 
-let learn_extensions = new Object;
+/*
+    anon. function - current context,
+
+    apply() и call() - first arg. - context
+
+    Func - object
+*/
+
+function getThis(){
+    return this;
+}
+
+let learn_extensions = {
+    getThis: getThis,
+    getThisFunc: function(){
+
+        let iternalAnonFunc = () => {
+            return this;
+        };
+        console.log(iternalAnonFunc());
+
+        return this;
+    },
+};
 
 learn_extensions.getIterator = (subject) => {
     switch (subject.constructor.name) {
@@ -56,6 +79,10 @@ learn_extensions.reduceLearn = (list, iteratee, memo, context) => {
     }
 
     return memo;
+};
+
+learn_extensions.invoke = () => {
+
 };
 
 let map = new Map(
